@@ -1,6 +1,6 @@
 # 0.1.0
 
-Initial release of mo_application_php
+Initial release of mo_application_ruby
 
 * Enhancements
   * an enhancement

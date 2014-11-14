@@ -1,4 +1,4 @@
-# mo_application_php-cookbook
+# mo_application_ruby-cookbook
 
 LWRP that extends mo_application for Ruby applications
 
@@ -8,7 +8,7 @@ Just include this recipe as a dependency and use provided LWRPs:
 
 ### Resource `mo_application_ruby`
 
-Is the specialized version of mo_application for PHP apps doing the following
+Is the specialized version of mo_application for Ruby apps doing the following
 tasks:
 
 * Creates an application directory

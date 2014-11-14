@@ -116,13 +116,6 @@ def nginx_options_for(action, name, options)
         "proxy_redirect" => "off",
         "proxy_pass"    => "http://ruby_app"
       },
-      %q(~ ^/(status|ping)$) => {
-        "access_log"    => "off",
-        "allow"         => node['mo_application_php']['status']['allow'],
-        "deny"          => "all",
-        "include"       => "fastcgi_params",
-        "fastcgi_pass"  => "unix:#{fpm_socket}"
-      }
     },
     "keepalive_timeout" => "10",
     "client_max_body_size" => "2G"
