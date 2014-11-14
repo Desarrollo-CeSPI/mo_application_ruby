@@ -16,6 +16,7 @@ action :install do
   end
 
   directory www_log_dir do
+    recursive true
     owner www_user
     group www_group
   end
@@ -99,8 +100,13 @@ end
 def nginx_options_for(action, name, options)
   {
     "action"    => action,
+    "upstream" => {
+      "ruby_app" => {
+        "server"  => "unix://#{nginx_document_root(::File.join('shared', options['shared_socket'] || 'var/run/socket'))}"
+      }
+    },
     "listen"    => "80",
-    "root"      => nginx_document_root(options['relative_document_root']),
+    "root"      => nginx_document_root(::File.join('current', options['relative_document_root'] || 'static')),
     "locations" => {
       %q(/) => {
         "try_files"     => "$uri $uri/ @ruby_app"
@@ -118,7 +124,11 @@ def nginx_options_for(action, name, options)
       },
     },
     "keepalive_timeout" => "10",
-    "client_max_body_size" => "2G"
+    "client_max_body_size" => "2G",
+    "options" => {
+      "access_log"  => ::File.join(www_log_dir, "#{name}-access.log"),
+      "error_log"   => ::File.join(www_log_dir, "#{name}-error.log"),
+    },
   }
 end
 

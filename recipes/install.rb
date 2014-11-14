@@ -1,4 +1,3 @@
-include_recipe 'chef-msttcorefonts::default'
 include_recipe 'mo_application::install'
 
 %w(
