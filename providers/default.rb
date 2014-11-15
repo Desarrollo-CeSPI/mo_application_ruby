@@ -96,12 +96,15 @@ def logrotate_postrotate
   CMD
 end
 
+def nginx_upstream
+  "#{new_resource.name}_ruby_app"
+end
 
 def nginx_options_for(action, name, options)
   {
     "action"    => action,
     "upstream" => {
-      "ruby_app" => {
+      nginx_upstream => {
         "server"  => "unix://#{nginx_document_root(::File.join('shared', options['shared_socket'] || 'var/run/socket'))}"
       }
     },
@@ -109,18 +112,18 @@ def nginx_options_for(action, name, options)
     "root"      => nginx_document_root(::File.join('current', options['relative_document_root'] || 'static')),
     "locations" => {
       %q(/) => {
-        "try_files"     => "$uri $uri/ @ruby_app"
+        "try_files"     => "$uri $uri/ @#{nginx_upstream}"
       },
       %q(~* \.(jpg|jpeg|gif|html|png|css|js|ico|txt|xml)$) => {
         "access_log"    => "off",
         "log_not_found" => "off",
         "expires"       => "365d"
       },
-      %q(@ruby_app) => {
+      %Q(@#{nginx_upstream}) => {
         "proxy_set_header"       => ["X-Forwarded-For $proxy_add_x_forwarded_for",
                                      "Host $http_host"],
         "proxy_redirect" => "off",
-        "proxy_pass"    => "http://ruby_app"
+        "proxy_pass"    => "http://#{nginx_upstream}"
       },
     },
     "keepalive_timeout" => "10",

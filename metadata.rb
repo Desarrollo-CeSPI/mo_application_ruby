@@ -4,7 +4,7 @@ maintainer_email 'chrodriguez@gmail.com leandro.ditommaso@mikroways.net'
 license          'All rights reserved'
 description      'Installs/Configures mo_application_ruby'
 long_description 'Installs/Configures mo_application_ruby'
-version          '0.1.5'
+version          '0.1.7'
 
 depends         'mo_application',     "~> 0.1.1"
 
