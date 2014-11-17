@@ -23,6 +23,8 @@ action :install do
 
   setup_upstart
 
+  sudo_reload :install
+
   setup_ssh
 
   if new_resource.deploy
@@ -79,6 +81,8 @@ action :remove do
   end
 
   logrotate false
+
+  sudo_reload :remove
 end
 
 
@@ -109,32 +113,86 @@ def nginx_options_for(action, name, options)
       }
     },
     "listen"    => "80",
-    "root"      => nginx_document_root(::File.join('current', options['relative_document_root'] || 'static')),
+    # path for static files
+    "root"      => nginx_document_root(::File.join('current', options['relative_document_root'] || 'public')),
     "locations" => {
       %q(/) => {
-        "try_files"     => "$uri $uri/ @#{nginx_upstream}"
-      },
-      %q(~* \.(jpg|jpeg|gif|html|png|css|js|ico|txt|xml)$) => {
-        "access_log"    => "off",
-        "log_not_found" => "off",
-        "expires"       => "365d"
-      },
-      %Q(@#{nginx_upstream}) => {
         "proxy_set_header"       => ["X-Forwarded-For $proxy_add_x_forwarded_for",
                                      "Host $http_host"],
-        "proxy_redirect" => "off",
-        "proxy_pass"    => "http://#{nginx_upstream}"
+        # If the file exists as a static file serve it directly without
+        # running all the other rewite tests on it
+        "if" => {
+          "-f $request_filename" => {
+            "break" => nil
+          },
+          # check for index.html for directory index
+          # if its there on the filesystem then rewite
+          # the url to add /index.html to the end of it
+          # and then break to send it to the next config rules.
+          "-f $request_filename/index.html" => {
+            "rewrite" => "(.*) $1/index.html break"
+          },
+          # this is the meat of the rack page caching config
+          # it adds .html to the end of the url and then checks
+          # the filesystem for that file. If it exists, then we
+          # rewite the url to have explicit .html on the end
+          # and then send it on its way to the next config rule.
+          # if there is no file on the fs then it sets all the
+          # necessary headers and proxies to our upstream pumas
+          "-f $request_filename.html" => {
+            "rewrite" => "(.*) $1.html break"
+          },
+          "!-f $request_filename" => {
+            "proxy_pass" => "http://#{nginx_upstream}",
+            "break" => nil
+          }
+        }
       },
+      # Now this supposedly should work as it gets the filenames with querystrings that Rails provides.
+      # BUT there's a chance it could break the ajax calls.
+      %q(~* \.(ico|css|gif|jpe?g|png|js)(\?[0-9]+)?$) => {
+        "access_log"    => "off",
+        "log_not_found" => "off",
+        "expires"       => "max",
+        "break"         => nil,
+      }
     },
-    "keepalive_timeout" => "10",
-    "client_max_body_size" => "2G",
     "options" => {
       "access_log"  => ::File.join(www_log_dir, "#{name}-access.log"),
       "error_log"   => ::File.join(www_log_dir, "#{name}-error.log"),
+
+      # ~2 seconds is often enough for most folks to parse HTML/CSS and
+      # retrieve needed images/icons/frames, connections are cheap in
+      # nginx so increasing this is generally safe...
+      "keepalive_timeout" => "10",
+      "client_max_body_size" => "2G",
+      # this rewrites all the requests to the maintenance.html
+      # page if it exists in the doc root. This is for capistrano's
+      # disable web task
+      "if" => {
+        "-f $document_root/maintenance.html" => {
+          "rewrite" =>  "^(.*)$  /maintenance.html last",
+          "break" => nil,
+        }
+     },
     },
   }
 end
 
 def setup_upstart
-  directory "/home/#{new_resource.user}/.init" 
+  directory "/etc/init/#{new_resource.user}" do
+    owner new_resource.user
+    group new_resource.group
+  end
+end
+
+def sudo_reload(to_do)
+  service_name = "#{new_resource.user}/application"
+  sudo "ruby_app_#{new_resource.user}" do
+    user      new_resource.user
+    runas     'root'
+    commands  ["/usr/sbin/service #{service_name} *", "/sbin/start #{service_name}", "/sbin/stop #{service_name}", "/sbin/restart #{service_name}"]
+    nopasswd  true
+    action to_do
+  end
 end
