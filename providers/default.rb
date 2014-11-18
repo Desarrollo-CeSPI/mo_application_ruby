@@ -109,7 +109,7 @@ def nginx_options_for(action, name, options)
     "action"    => action,
     "upstream" => {
       nginx_upstream => {
-        "server"  => "unix://#{nginx_document_root(::File.join('shared', options['shared_socket'] || 'var/run/socket'))}"
+        "server"  => "unix:#{nginx_document_root(::File.join('shared', options['shared_socket'] || 'var/run/socket'))}"
       }
     },
     "listen"    => "80",
@@ -147,7 +147,7 @@ def nginx_options_for(action, name, options)
             "break" => nil
           }
         }
-      },
+      }.merge(options['allow'] ? {'allow' => options['allow'], 'deny' => 'all'}: {}),
       # Now this supposedly should work as it gets the filenames with querystrings that Rails provides.
       # BUT there's a chance it could break the ajax calls.
       %q(~* \.(ico|css|gif|jpe?g|png|js)(\?[0-9]+)?$) => {
