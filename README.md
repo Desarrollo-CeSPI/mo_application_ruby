@@ -28,6 +28,9 @@ tasks:
     * **relative_document_root:** as deploy resource will create a current symlink, then specified path
       for this option must be a relative project path: by default we asume it is `web/`
 
+If applications document root includes a file named `mantenimiento.html` it will
+be served as first resource in any cases
+
 ## Recipes
 
 ### Recipe `mo_application_ruby::install`
