@@ -25,7 +25,7 @@ action :install do
 
   sudo_reload :install
 
-  setup_ssh
+  setup_ssh new_resource.user, new_resource.group, new_resource.ssh_private_key
 
   if new_resource.deploy
 
