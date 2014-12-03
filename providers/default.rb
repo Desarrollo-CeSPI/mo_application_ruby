@@ -16,9 +16,10 @@ action :install do
   end
 
   directory www_log_dir do
-    recursive true
     owner www_user
-    group www_group
+    group new_resource.group
+    mode 0750
+    recursive true
   end
 
   setup_upstart
@@ -54,7 +55,7 @@ action :install do
 
   end
 
-  link ::File.join('/home',new_resource.user,'application') do
+  link ::File.join('/home',new_resource.user,'application') do 
     to ::File.join(new_resource.path)
   end
 
