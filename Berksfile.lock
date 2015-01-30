@@ -34,7 +34,7 @@ GRAPH
   hostsfile (2.4.5)
   java (1.29.0)
   logrotate (1.7.0)
-  mo_application (0.1.34)
+  mo_application (0.1.35)
     chef-msttcorefonts (~> 0.9.0)
     chef-sugar (~> 2.4.1)
     database (~> 2.3.1)
