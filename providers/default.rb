@@ -101,15 +101,15 @@ def logrotate_postrotate
   CMD
 end
 
-def nginx_upstream
-  "#{new_resource.name}_ruby_app"
+def nginx_upstream(name)
+  "#{new_resource.name}_#{name}_ruby_app"
 end
 
 def nginx_options_for(action, name, options)
   {
     "action"    => action,
     "upstream" => {
-      nginx_upstream => {
+      nginx_upstream(name) => {
         "server"  => "unix:#{nginx_document_root(::File.join('shared', options['shared_socket'] || 'var/run/socket'))}"
       }
     },
@@ -117,19 +117,19 @@ def nginx_options_for(action, name, options)
     # path for static files
     "root"      => nginx_document_root(::File.join('current', options['relative_document_root'] || 'public')),
     "locations" => {
-      "@#{nginx_upstream}" => {
+      "@#{nginx_upstream(name)}" => {
         "proxy_set_header"  => ["X-Forwarded-For $proxy_add_x_forwarded_for",
                                      "Host $http_host"],
         "proxy_redirect" => "off",
-        "proxy_pass" => "http://#{nginx_upstream}",
+        "proxy_pass" => "http://#{nginx_upstream(name)}",
       },
       %q(/) => {
-        "try_files" => "$uri @#{nginx_upstream}",
+        "try_files" => "$uri @#{nginx_upstream(name)}",
       }.merge(options['allow'] ? {'allow' => options['allow'], 'deny' => 'all'}: {}),
       # Now this supposedly should work as it gets the filenames with querystrings that Rails provides.
       # BUT there's a chance it could break the ajax calls.
       %q(~* \.(ico|css|gif|jpe?g|png|js)(\?[0-9]+)?$) => {
-        "try_files"     => "$uri @#{nginx_upstream}",
+        "try_files"     => "$uri @#{nginx_upstream(name)}",
         "access_log"    => "off",
         "log_not_found" => "off",
         "expires"       => "max",
