@@ -73,7 +73,7 @@ action :remove do
 
   directory new_resource.path do
     recursive true
-    action :remove
+    action :delete
   end
 
   mo_application_user new_resource.user do
