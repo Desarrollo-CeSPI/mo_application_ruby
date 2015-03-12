@@ -45,7 +45,7 @@ GRAPH
     nginx_conf (~> 0.2.4)
     nscd (~> 0.12.0)
     user (~> 0.3.1)
-  mo_application_ruby (0.1.21)
+  mo_application_ruby (0.1.22)
     java (~> 1.29.0)
     mo_application (~> 0.1.34)
     sudo (~> 2.7.1)
