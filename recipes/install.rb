@@ -7,3 +7,10 @@ include_recipe 'java::default'
   imagemagick libmagickcore-dev lsb-core lsb-release nodejs npm libffi-dev).
   each { |p| package p }
 
+if node['mo_application_ruby']['rbenv']['enabled']
+  include_recipe "rbenv::default"
+  include_recipe "rbenv::ruby_build"
+  rbenv_ruby node['mo_application_ruby']['rbenv']['ruby_version'] do
+    global true
+  end
+end

@@ -9,5 +9,6 @@ version          '0.1.22'
 depends         'mo_application',     "~> 0.1.34"
 depends         'java',               "~> 1.29.0"
 depends         'sudo',               "~> 2.7.1"
+depends         'rbenv',              '~>1.7.1'
 
 supports "ubuntu", ">= 14.04"

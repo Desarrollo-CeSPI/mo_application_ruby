@@ -1,11 +1,9 @@
-include ::MoApplication::DeployResourceBase
+actions :install, :remove
+default_action :install
+
+include ::MoApplicationRuby::DeployResourceBase
 
 def initialize(name, run_context=nil)
   super
-  @callbacks = {}
-  @user = name
-  @group = name
-  @home = "/home/#{user}"
+  @shared_dirs = {'log' => 'log', 'tmp' => 'tmp'}
 end
-
-

@@ -1,0 +1,10 @@
+start on starting <%= @depends %>
+stop on stopping <%= @depends %>
+
+<% @env.each do |k,v| %>
+env <%= "#{k}='#{v}'" %>
+<% end %>
+
+setuid <%= @setuid %>
+chdir <%= @chdir %>
+exec <%= @exec %> > <%= @log %> 2> <%= @error_log %>
