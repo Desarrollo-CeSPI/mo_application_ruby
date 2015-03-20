@@ -8,16 +8,17 @@ class MoApplicationRuby
 
     def initialize(name, run_context=nil)
       super
-      @callbacks = {}
       @user = name
       @group = name
       @home = "/home/#{user}"
       @environment = {"RACK_ENV" => "production" }
+      @restart_command = "sudo service #{user}/application restart"
       me = self
       @before_migrate = Proc.new do
-        bundle_binstubs = ::File.join(me.path,me.relative_path, 'shared','bundle','bin')
+        bundle_binstubs = ::File.join(me.path, me.relative_path, 'shared','bundle-bin')
+        bundle_path = ::File.join(me.path, me.relative_path, 'shared','bundle')
         rbenv_execute "Run bundle install #{me.name}" do
-          command "bundle install --deployment --binstubs #{bundle_binstubs} --without #{Array(me.bundle_without_groups).join}"
+          command "bundle install --deployment --binstubs #{bundle_binstubs} --path #{bundle_path} --without #{Array(me.bundle_without_groups).join}"
           cwd release_path
           environment me.environment
           ruby_version me.ruby_version
