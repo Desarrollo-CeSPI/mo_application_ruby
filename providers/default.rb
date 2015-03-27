@@ -18,7 +18,7 @@ end
 
 # Install ruby if rbenv is enabled
 def setup_ruby
-  if node['mo_application_ruby']['rbenv']['enabled']
+  if new_resource.deploy
     rbenv_ruby new_resource.ruby_version
     rbenv_gem "bundler" do
       ruby_version new_resource.ruby_version
