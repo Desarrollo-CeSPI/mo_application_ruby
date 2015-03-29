@@ -82,6 +82,7 @@ end
 # And then remove each script created
 def remove_services
   service upstart_service(main_service) do
+    provider Chef::Provider::Service::Upstart
     action :stop
   end
 
@@ -167,12 +168,12 @@ end
 
 # All services will depend on this service name
 def main_service
-  "application"
+  new_resource.main_service
 end
 
 # Upstart service name
 def upstart_service(name)
-  "#{new_resource.user}/#{name}"
+  new_resource.upstart_service(name)
 end
 
 def service_name(name)

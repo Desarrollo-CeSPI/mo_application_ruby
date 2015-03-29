@@ -6,6 +6,16 @@ class MoApplicationRuby
       klass.attribute :bundle_without_groups, :kind_of => Array, :default => %q(development test)
     end
 
+    # All services will depend on this service name
+    def main_service
+      "application"
+    end
+
+    # Upstart service name
+    def upstart_service(name)
+      "#{user}/#{name}"
+    end
+
     def initialize(name, run_context=nil)
       super
       @user = name
