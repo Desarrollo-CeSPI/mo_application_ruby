@@ -16,13 +16,11 @@ def install_application
   super
 end
 
-# Install ruby if rbenv is enabled
+# Install ruby
 def setup_ruby
-  if new_resource.deploy
-    rbenv_ruby new_resource.ruby_version
-    rbenv_gem "bundler" do
-      ruby_version new_resource.ruby_version
-    end
+  rbenv_ruby new_resource.ruby_version
+  rbenv_gem "bundler" do
+    ruby_version new_resource.ruby_version
   end
 end
 

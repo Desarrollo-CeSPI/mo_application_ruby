@@ -1,16 +1,5 @@
 def _ruby_app_deploy(data, which, &before_deploy_block)
-  r = mo_application_deploy(data, which, &before_deploy_block)
-
-  node.set[:rbenv][:group_users] = if data['remove']
-                                     Array(node[:rbenv][:group_users]).delete(r.user)
-                                   else
-                                     Array(node[:rbenv][:group_users]) + [ r.user ]
-                                   end
-
-  group node[:rbenv][:group] do
-    members node[:rbenv][:group_users]
-    action :modify
-  end
+  mo_application_deploy(data, which, &before_deploy_block)
 end
 
 def ruby_application(data, &before_deploy_block)
