@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.scope = :box
   end
 
-  config.vm.define 'app' do |app|
+  config.vm.define 'app_ruby' do |app|
     app.vm.hostname = "mo-application-ruby.vagrant.desarrollo.unlp.edu.ar"
     app.omnibus.chef_version = "11.16.4"
     app.vm.box = "chef/ubuntu-14.04"
