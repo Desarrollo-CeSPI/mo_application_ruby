@@ -35,7 +35,7 @@ GRAPH
     database (~> 4.0.3)
     logrotate (~> 1.7.0)
     mo_backup (~> 0.1.0)
-    mysql (~> 6.0.0)
+    mo_mysql (~> 1.0.0)
     mysql2_chef_gem (~> 1.0.1)
     nginx (~> 2.7.4)
     nginx_conf (~> 0.2.4)

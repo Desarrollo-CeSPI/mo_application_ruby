@@ -106,6 +106,7 @@ end
 
 # Custom nginx_options foreach ruby application
 def nginx_options_for(action, name, options)
+  allow_from = options && options.has_key?('allow') ? options.delete('allow') : false
   {
     "action"    => action,
     "upstream" => {
@@ -125,7 +126,7 @@ def nginx_options_for(action, name, options)
       },
       %q(/) => {
         "try_files" => "$uri @#{nginx_upstream(name)}",
-      }.merge(options['allow'] ? {'allow' => options['allow'], 'deny' => 'all'}: {}),
+      }.merge(allow_from ? {'allow' => allow_from, 'deny' => 'all'}: {}),
       # Now this supposedly should work as it gets the filenames with querystrings that Rails provides.
       # BUT there's a chance it could break the ajax calls.
       %q(~* \.(ico|css|gif|jpe?g|png|js)(\?[0-9]+)?$) => {
@@ -153,7 +154,7 @@ def nginx_options_for(action, name, options)
           "break" => nil,
         }
      },
-    },
+    }.merge(options['options'] || Hash.new),
   }
 end
 
