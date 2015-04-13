@@ -75,7 +75,7 @@ end
 
 # This array is a super method used to create sudo service restart permissions
 def services_names
-  (super << main_service).map {|x| upstart_service x}
+  super.map {|x| upstart_service(service_name(x))} << upstart_service(main_service)
 end
 
 # Remove services action must stop service before remove
