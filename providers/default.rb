@@ -54,7 +54,8 @@ stop on runlevel [!2345]
 
   environment = new_resource.environment.merge({"PATH" => ([rbenv_shims_path, rbenv_bin_path] + system_path).uniq.join(":")})
   depends = upstart_service(main_service)
-  new_resource.services.each do |service, command|
+  new_resource.services.each do |service, opts|
+    raise "Upstart service must have an exec section for service #{service}" unless opts['exec']
     template ::File.join(upstart_base_dir,"#{service_name service}.conf") do
       source "upstart-template.conf.erb"
       owner new_resource.user
@@ -64,7 +65,8 @@ stop on runlevel [!2345]
         :depends => depends,
         :setuid => new_resource.user,
         :chdir => application_current_path,
-        :exec => command,
+        :exec => opts['exec'],
+        :options => Array(opts['options']),
         :log => application_log(service),
         :error_log => application_error_log(service))
     end
