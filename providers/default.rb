@@ -6,7 +6,7 @@ action :install do
 end
 
 action :remove do
-  uninstall_aplication
+  uninstall_application
 end
 
 
@@ -87,6 +87,7 @@ def remove_services
   end
 
   directory upstart_base_dir do
+    recursive true
     action :delete
   end
 end
