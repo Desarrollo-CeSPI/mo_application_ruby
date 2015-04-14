@@ -16,6 +16,39 @@ def install_application
   super
 end
 
+def configure_user_environment
+  custom_bashrc = ".bashrc.custom"
+
+  bash "append_to_bash_rc #{new_resource.name}" do
+   user new_resource.user
+   code <<-EOF
+      echo 'source $HOME/#{custom_bashrc}' >> /home/#{new_resource.user}/.bashrc
+   EOF
+   not_if "grep -q 'source $HOME/#{custom_bashrc}' /home/#{new_resource.user}/.bashrc "
+ end
+
+  file "/home/#{new_resource.user}/#{custom_bashrc}" do
+    owner new_resource.user
+    mode  '0600'
+    content <<-EOF
+RACK_ENV=production
+RAILS_ENV=production
+# cd to current app path
+alias cdp='cd $HOME/application/current'
+# run a rails console in the current app path
+alias rc='cdp && bin/rails console'
+# run rake db:migrate in the current app path
+alias rdm='cdp && bin/rake db:migrate'
+# tail -f current application logs
+alias logs='cdp && tail -f log/*.log'
+# interact with the application's service
+alias srv='sudo service $USER/application'
+# shorthand alias to restart the application
+alias restart='srv restart'
+    EOF
+  end
+end
+
 # Install ruby
 def setup_ruby
   rbenv_ruby new_resource.ruby_version

@@ -2,12 +2,24 @@ def _ruby_app_deploy(data, which, &before_deploy_block)
   mo_application_deploy(data, which, &before_deploy_block)
 end
 
+def merge_default_ruby_environment(data)
+  data.tap do |d|
+    d['environment'] = { "RACK_ENV" => "production" }.merge(d['environment'] || Hash.new)
+  end
+end
+
+def merge_default_rails_environment(data)
+  data.tap do |d|
+    d['environment'] = { "RAILS_ENV" => "production", "RACK_ENV" => "production" }.merge(d['environment'] || Hash.new)
+  end
+end
+
 def ruby_application(data, &before_deploy_block)
-  _ruby_app_deploy(data, :mo_application_ruby, &before_deploy_block)
+  _ruby_app_deploy(merge_default_ruby_environment(data), :mo_application_ruby, &before_deploy_block)
 end
 
 def rails_application(data, &before_deploy_block)
-  _ruby_app_deploy(data, :mo_application_ruby_rails, &before_deploy_block)
+  _ruby_app_deploy(merge_default_rails_environment(data), :mo_application_ruby_rails, &before_deploy_block)
 end
 
 def ruby_define_service
