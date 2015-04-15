@@ -85,7 +85,10 @@ stop on runlevel [!2345]
     FILE
   end
 
-  environment = new_resource.environment.merge({"PATH" => ([rbenv_shims_path, rbenv_bin_path] + system_path).uniq.join(":")})
+  environment = new_resource.environment.merge({
+    "HOME" => "/home/#{new_resource.user}",
+    "PATH" => ([rbenv_shims_path, rbenv_bin_path] + system_path).uniq.join(":")
+  })
   depends = upstart_service(main_service)
   new_resource.services.each do |service, opts|
     raise "Upstart service must have an exec section for service #{service}" unless opts['exec']
