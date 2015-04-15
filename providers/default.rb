@@ -31,8 +31,8 @@ def configure_user_environment
     owner new_resource.user
     mode  '0600'
     content <<-EOF
-RACK_ENV=production
-RAILS_ENV=production
+export RACK_ENV=production
+export RAILS_ENV=production
 # cd to current app path
 alias cdp='cd $HOME/application/current'
 # run a rails console in the current app path
