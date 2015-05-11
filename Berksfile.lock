@@ -65,7 +65,7 @@ GRAPH
     nginx_conf (~> 0.2.4)
     nscd (~> 0.12.0)
     user (~> 0.4.0)
-  mo_application_ruby (1.1.0)
+  mo_application_ruby (1.1.1)
     java (~> 1.29.0)
     mo_application (~> 1.1.0)
     rbenv (~> 1.7.1)

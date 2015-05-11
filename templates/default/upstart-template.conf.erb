@@ -1,5 +1,6 @@
 start on starting <%= @depends %>
 stop on stopping <%= @depends %>
+respawn
 
 <% @env.each do |k,v| %>
 env <%= "#{k}='#{v}'" %>
