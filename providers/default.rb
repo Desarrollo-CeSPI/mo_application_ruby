@@ -159,10 +159,10 @@ def nginx_options_for(action, name, options)
     "locations" => {
       "@#{nginx_upstream(name)}" => {
         "proxy_set_header"  => ["X-Forwarded-For $proxy_add_x_forwarded_for",
-                                     "Host $http_host"],
+                                "Host $http_host"],
         "proxy_redirect" => "off",
         "proxy_pass" => "http://#{nginx_upstream(name)}",
-      },
+      }.merge(options['upstream_options'] || Hash.new),
       %q(/) => {
         "try_files" => "$uri @#{nginx_upstream(name)}",
       }.merge(allow_from ? {'allow' => allow_from, 'deny' => 'all'}: {}),
@@ -192,8 +192,8 @@ def nginx_options_for(action, name, options)
           "rewrite" =>  "^(.*)$  /mantenimiento.html last",
           "break" => nil,
         }
-     },
-    }.merge(options['options'] || Hash.new),
+     }
+    }
   }
 end
 
