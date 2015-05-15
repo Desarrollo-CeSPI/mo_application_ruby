@@ -8,7 +8,7 @@ env <%= "#{k}='#{v}'" %>
 
 setuid <%= @setuid %>
 chdir <%= @chdir %>
-exec <%= @exec %> > <%= @log %> 2> <%= @error_log %>
+exec <%= @exec %> >> <%= @log %> 2>> <%= @error_log %>
 
 <% @options.each do |opt| %>
 <%= "#{opt}"%>
