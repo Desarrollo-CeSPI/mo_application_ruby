@@ -27,12 +27,15 @@ def configure_user_environment
    not_if "grep -q 'source $HOME/#{custom_bashrc}' /home/#{new_resource.user}/.bashrc "
  end
 
+  environment = {'RACK_ENV'=>'production', 'RAILS_ENV' => 'production'}.
+    merge(new_resource.environment).map {|k,v| "export #{k}=#{v}" }.join "\n"
+
   file "/home/#{new_resource.user}/#{custom_bashrc}" do
     owner new_resource.user
     mode  '0600'
     content <<-EOF
-export RACK_ENV=production
-export RAILS_ENV=production
+#{environment}
+
 # cd to current app path
 alias cdp='cd $HOME/application/current'
 # run a rails console in the current app path
