@@ -16,6 +16,10 @@ def install_application
   super
 end
 
+def logrotate_options
+  super << "copytruncate"
+end
+
 def configure_user_environment
   custom_bashrc = ".bashrc.custom"
 
