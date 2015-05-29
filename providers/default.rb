@@ -98,6 +98,7 @@ stop on runlevel [!2345]
   })
   depends = upstart_service(main_service)
   new_resource.services.each do |service, opts|
+    next if opts.nil?
     raise "Upstart service must have an exec section for service #{service}" unless opts['exec']
     template ::File.join(upstart_base_dir,"#{service_name service}.conf") do
       source "upstart-template.conf.erb"
