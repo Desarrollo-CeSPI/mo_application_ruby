@@ -12,3 +12,6 @@ include_recipe "rbenv::ruby_build"
 rbenv_ruby node['mo_application_ruby']['rbenv']['ruby_version'] do
   global true
 end
+
+
+update_installed_ruby
