@@ -4,7 +4,7 @@ include Chef::Mixin::Rbenv
 
 
 def update_installed_ruby
-    out = shell_out("rbenv versions --bare",
+    out = shell_out("#{rbenv_bin_path}/rbenv versions --bare",
                     :user => node['rbenv']['user'],
                     :cwd  => rbenv_root_path,
                     :env  => { 'RBENV_ROOT' => rbenv_root_path })
