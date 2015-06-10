@@ -1,4 +1,6 @@
 def _ruby_app_deploy(data, which, &before_deploy_block)
+  data['update_gems'] = true if data['update_gems'].nil? && node['mo_application_ruby']['update_gems']
+  data['force_deploy'] = true if data['update_gems']
   mo_application_deploy(data, which, &before_deploy_block)
 end
 
