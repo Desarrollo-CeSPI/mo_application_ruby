@@ -4,6 +4,7 @@ class MoApplicationRuby
       klass.send(:include, ::MoApplication::DeployResourceBase)
       klass.attribute :ruby_version, :kind_of => String, :default => "2.1.4"
       klass.attribute :update_gems, :kind_of => [TrueClass, FalseClass], :default => false
+      klass.attribute :bundle_install_jobs, :kind_of => Integer
       klass.attribute :bundle_without_groups, :kind_of => Array, :default => %q(development test)
     end
 
@@ -37,7 +38,7 @@ class MoApplicationRuby
           end
         end
         rbenv_execute "Run bundle install #{me.name}" do
-          command "bundle install --deployment --binstubs #{bundle_binstubs} --path #{bundle_path} --without #{Array(me.bundle_without_groups).join} --jobs #{[1,Integer(node.cpu.total*0.8)].max}"
+          command "bundle install --deployment --binstubs #{bundle_binstubs} --path #{bundle_path} --without #{Array(me.bundle_without_groups).join} --jobs #{me.bundle_install_jobs ? me.bundle_install_jobs : [1,Integer(node.cpu.total*0.8)].max}"
           cwd release_path
           environment me.environment
           ruby_version me.ruby_version
