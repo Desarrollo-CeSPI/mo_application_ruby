@@ -5,10 +5,8 @@ def mo_application_ruby_statistics_from_databag(cookbook_name)
 end
 
 def mo_application_ruby_statistics(data)
-  (data['applications']|| Hash.new).each do |k, v_data| 
-    mo_collectd_user_rss data['id'], !!!data['remove']
-    mo_collectd_file_count data['id'], mo_application_filecount_directories(data),!!!data['remove']
-  end
+  mo_collectd_user_rss data['id'], !!!data['remove']
+  mo_collectd_file_count data['id'], mo_application_filecount_directories(data),!!!data['remove']
 end
 
 def mo_application_filecount_directories(data)
