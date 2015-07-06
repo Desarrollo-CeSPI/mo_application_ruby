@@ -191,7 +191,6 @@ def nginx_options_for(action, name, options)
       # retrieve needed images/icons/frames, connections are cheap in
       # nginx so increasing this is generally safe...
       "keepalive_timeout" => "10",
-      "client_max_body_size" => "50M",
       # this rewrites all the requests to the maintenance.html
       # page if it exists in the doc root. This is for capistrano's
       # disable web task
