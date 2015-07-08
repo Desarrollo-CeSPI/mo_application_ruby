@@ -6,7 +6,7 @@ description      'Installs/Configures mo_application_ruby'
 long_description 'Installs/Configures mo_application_ruby'
 version          '1.2.0'
 
-depends         'mo_application',     "~> 1.1.0"
+depends         'mo_application',     "~> 1.1.17"
 depends         'java',               "~> 1.29.0"
 depends         'sudo',               "~> 2.7.1"
 depends         'rbenv',              '~>1.7.1'

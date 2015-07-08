@@ -5,4 +5,5 @@ def mo_application_ruby_monitoring_from_databag(cookbook_name)
 end
 
 def mo_application_ruby_monitoring(data)
+  mo_application_http_check data
 end
