@@ -32,7 +32,7 @@ def configure_user_environment
  end
 
   environment = {'RACK_ENV'=>'production', 'RAILS_ENV' => 'production'}.
-    merge(new_resource.environment).map {|k,v| "export #{k}=#{v}" }.join "\n"
+    merge(new_resource.environment).map {|k,v| "export #{k}=\"#{v}\"" }.join "\n"
 
   file "/home/#{new_resource.user}/#{custom_bashrc}" do
     owner new_resource.user
