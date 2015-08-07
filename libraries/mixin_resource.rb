@@ -24,9 +24,9 @@ class MoApplicationRuby
       @group = name
       @home = "/home/#{user}"
       @environment = {"RACK_ENV" => "production" }
-      @restart_command = "sudo service #{user}/application restart"
       @force_deploy = @force_deploy || @update_gems
       me = self
+      @restart_command = lazy { "sudo service #{me.user}/application restart" }
       @before_migrate = Proc.new do
         bundle_binstubs = ::File.join(me.path, me.relative_path, 'shared','bundle-bin')
         bundle_path = ::File.join(me.path, me.relative_path, 'shared','bundle')
