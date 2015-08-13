@@ -20,6 +20,14 @@ def logrotate_options
   super << "copytruncate"
 end
 
+def logrotate_service_logs
+  Array(www_logs)
+end
+
+def logrotate_postrotate
+  logrotate_postrotate_nginx
+end
+
 def configure_user_environment
   custom_bashrc = ".bashrc.custom"
 
