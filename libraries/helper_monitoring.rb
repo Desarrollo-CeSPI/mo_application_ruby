@@ -6,4 +6,5 @@ end
 
 def mo_application_ruby_monitoring(data)
   mo_application_http_check data
+  mo_application_custom_check data
 end
