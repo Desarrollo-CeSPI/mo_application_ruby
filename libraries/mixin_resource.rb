@@ -38,7 +38,7 @@ class MoApplicationRuby
           end
         end
         rbenv_execute "Run bundle install #{me.name}" do
-          command "bundle install --binstubs #{bundle_binstubs} --path #{bundle_path} --without #{Array(me.bundle_without_groups).join} --jobs #{me.bundle_install_jobs ? me.bundle_install_jobs : [4,[1,Integer(node.cpu.total*0.8)].max].min}"
+          command "bundle install --deployment --binstubs #{bundle_binstubs} --path #{bundle_path} --without #{Array(me.bundle_without_groups).join} --jobs #{me.bundle_install_jobs ? me.bundle_install_jobs : [4,[1,Integer(node.cpu.total*0.8)].max].min}"
           cwd release_path
           environment me.environment
           ruby_version me.ruby_version
