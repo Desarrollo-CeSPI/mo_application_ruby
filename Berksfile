@@ -1,4 +1,4 @@
-source "https://supermarket.getchef.com"
+source "http://berks.desarrollo.unlp.edu.ar"
 
 # Dependencies from mo_application
 cookbook 'nginx_conf',          git: 'git://github.com/firebelly/chef-nginx_conf.git'
